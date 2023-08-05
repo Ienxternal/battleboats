@@ -2,24 +2,25 @@ const Ship = require('./models/Ship');
 const User = require('./models/UserModel');
 
 const resolvers = {
-  Query: {
-    getShips: async () => {
-      try {
-        const ships = await Ship.find();
-        return ships;
-      } catch (error) {
-        throw new Error('Error fetching ships:', error);
-      }
+    Query: {
+        getShips: async () => {
+            try {
+              const ships = await Ship.find();
+              return ships;
+            } catch (error) {
+              console.error('Error fetching ships:', error);
+              throw new Error('Error fetching ships: ' + error.message);
+            }
+        },
+        getUsers: async () => {
+          try {
+            const users = await User.find();
+            return users;
+          } catch (error) {
+            throw new Error('Error fetching users: ' + error.message);
+          }
+        },
     },
-    getUsers: async () => {
-      try {
-        const users = await User.find();
-        return users;
-      } catch (error) {
-        throw new Error('Error fetching users:', error);
-      }
-    },
-  },
   Mutation: {
     createUser: async (_, { username, email, password }) => {
       try {

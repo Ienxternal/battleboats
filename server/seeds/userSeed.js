@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const User = require('./models/UserModel');
+const User = require('../models/UserModel');
 
 // Replace 'your-mongodb-connection-string' with your actual MongoDB connection URL
-const mongoDBConnectionString = 'mongodb+srv://user0xdefault:SsXgFCxTSHDRKAz0@cluster0.ltqemr5.mongodb.net/';
+const mongoDBConnectionString = process.env.MONGODB_CONNECTION_STRING;
 
 mongoose
   .connect(mongoDBConnectionString, {
