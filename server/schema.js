@@ -1,8 +1,5 @@
-// schema.js
-
 const { gql } = require('apollo-server-express');
 
-// Define your type definitions using GraphQL schema language (SDL)
 const typeDefs = gql`
   type Ship {
     id: ID!
@@ -18,7 +15,7 @@ const typeDefs = gql`
 
   type Query {
     getShips: [Ship!]!
-    getUsers: [User!]!  # Add the getUsers query here
+    getUsers: [User!]!
   }
 
   type Mutation {
@@ -26,4 +23,4 @@ const typeDefs = gql`
   }
 `;
 
-module.exports = typeDefs;
+module.exports = { typeDefs };
