@@ -5,7 +5,7 @@ const resolvers = {
   Query: {
     getShips: async () => {
       try {
-        const ships = await Ship.find();
+        const ships = await Ship.find({});
         return ships;
       } catch (error) {
         console.error('Error fetching ships:', error);

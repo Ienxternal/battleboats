@@ -19,7 +19,7 @@ const typeDefs = gql`
     player1: User!
     player2: User
     status: String!
-    ships: [Ship!]!
+    ships: [Ship]
     currentPlayer: User
     # ... other game fields
   }
@@ -30,7 +30,7 @@ const typeDefs = gql`
   }
 
   type Query {
-    getShips: [Ship!]!
+    getShips: [Ship]
     getUsers(filter: UserFilter): [User!]!
     allUsers: [User!]!
   }
