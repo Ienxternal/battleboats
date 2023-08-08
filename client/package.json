@@ -16,6 +16,8 @@
     "css-loader": "^6.8.1",
     "dotenv": "^16.3.1",
     "graphql": "^16.7.1",
+    "@headlessui/react": "^1.7.16",
+    "@heroicons/react": "^2.0.18",
     "html-webpack-plugin": "^5.5.3",
     "jsonwebtoken": "^9.0.1",
     "os-browserify": "^0.3.0",
