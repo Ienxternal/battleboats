@@ -1,11 +1,10 @@
 const Ship = require('../models/Ship');
 const User = require('../models/UserModel');
-
 const resolvers = {
   Query: {
     getShips: async () => {
       try {
-        const ships = await Ship.find();
+        const ships = await Ship.find({});
         return ships;
       } catch (error) {
         console.error('Error fetching ships:', error);
@@ -27,7 +26,6 @@ const resolvers = {
       try {
         // Create the user in the database
         const newUser = await User.create({ username, email, password });
-
         // Return the newly created user
         return newUser;
       } catch (error) {
@@ -37,28 +35,22 @@ const resolvers = {
     startGame: async (_, { player1, player2 }) => {
       // Create a new game in the database
       const newGame = await Game.create({ player1, player2, status: 'waiting' });
-
       // Emit socket event to start the game
       io.emit('startGame', newGame._id);
-
       return newGame;
     },
     placeShip: async (_, { gameId, playerId, row, col, length, orientation }) => {
       // Validate and place the ship in the game
       // ...
-
       // Emit socket event to update the game
       io.to(gameId).emit('gameUpdated', updatedGame);
-
       return ship;
     },
     makeMove: async (_, { gameId, row, col, playerId }) => {
       // Validate the move and update the game state
       // ...
-
       // Emit socket event to update the game
       io.to(gameId).emit('gameUpdated', updatedGame);
-
       return updatedGame;
     }
   },
@@ -71,5 +63,4 @@ const resolvers = {
     },
   },
 };
-
 module.exports = resolvers;
