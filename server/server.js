@@ -1,6 +1,7 @@
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 const bodyParser = require('body-parser');
+const { check, validationResult } = require('express-validator');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const User = require('./models/UserModel');
@@ -11,8 +12,8 @@ const { typeDefs, resolvers } = require('./graphQL/schema');
 const app = express();
 app.use(bodyParser.json());
 
-// Enable CORS middleware
-app.use(cors());
+app.use(cors({
+}));
 
 // Replace this with your actual MongoDB URI
 const MONGO_URI = process.env.MONGODB_CONNECTION_STRING;
@@ -35,16 +36,81 @@ db.on('error', (err) => {
   console.error('MongoDB connection error:', err);
 });
 
-// ... (existing routes for signup, login, and logout)
-
 // Route for handling user signup
-app.post('/api/signup', async (req, res) => {
-  // ... (your signup logic)
+app.post('/api/signup', [
+  // Validate username (minimum length 3 characters)
+  check('username').isLength({ min: 3 }).withMessage('Username must be at least 3 characters long'),
+
+  // Validate email
+  check('email').isEmail().withMessage('Invalid email address'),
+
+  // Validate password (minimum length 6 characters)
+  check('password').isLength({ min: 4 }).withMessage('Password must be at least 6 characters long'),
+], async (req, res) => {
+  // Validate the request body using express-validator
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  try {
+    const { username, email, password } = req.body;
+
+    // Check if the email is already registered
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'Email is already registered' });
+    }
+
+    // Hash the password using bcrypt
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Create the user in the database
+    const newUser = await User.create({
+      username,
+      email,
+      password: hashedPassword,
+    });
+
+    // Add a console log to track successful signups
+    console.log(`User '${username}' successfully registered with email '${email}'`);  
+
+    // Create a JWT token for the user
+    const token = jwt.sign({ userId: newUser._id }, 'your-secret-key', { expiresIn: '1h' });
+
+    // Send the token and user data as response
+    res.status(201).json({ token, user: newUser });
+  } catch (error) {
+    res.status(500).json({ message: 'Error creating user', error: error.message });
+  }
 });
 
 // Route for handling user login
 app.post('/api/login', async (req, res) => {
-  // ... (your login logic)
+  const { email, password } = req.body;
+
+  try {
+    // Check if the user exists in the database
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    // Compare the provided password with the hashed password in the database
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    // Create a JWT token for the user
+    const token = jwt.sign({ userId: user._id }, 'your-secret-key', { expiresIn: '1h' });
+
+    // Send the token and user data as response
+    res.json({ token, user });
+  } catch (error) {
+    res.status(500).json({ message: 'Error logging in', error: error.message });
+  }
 });
 
 // Route for handling user logout
