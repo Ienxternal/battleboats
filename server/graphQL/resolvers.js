@@ -1,5 +1,9 @@
 const Ship = require('../models/Ship');
 const User = require('../models/UserModel');
+const Game = require('../models/Game'); // Import the Game model
+const { io, pubsub } = require('../socket'); // Import the socket.io instance and pubsub
+
+
 const resolvers = {
   Query: {
     getShips: async () => {
@@ -29,22 +33,27 @@ const resolvers = {
         // Return the newly created user
         return newUser;
       } catch (error) {
+        console.error('Error creating users:', error);
         throw new Error('Error creating user:', error);
       }
     },
     startGame: async (_, { player1, player2 }) => {
+      try{
       // Create a new game in the database
       const newGame = await Game.create({ player1, player2, status: 'waiting' });
       // Emit socket event to start the game
       io.emit('startGame', newGame._id);
       return newGame;
+      } catch (error) {
+        throw new Error('Error creating user:', error);
+      }
     },
     placeShip: async (_, { gameId, playerId, row, col, length, orientation }) => {
       // Validate and place the ship in the game
       // ...
       // Emit socket event to update the game
       io.to(gameId).emit('gameUpdated', updatedGame);
-      return ship;
+      return Ship;
     },
     makeMove: async (_, { gameId, row, col, playerId }) => {
       // Validate the move and update the game state

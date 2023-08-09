@@ -13,7 +13,7 @@ const GET_USER = gql`
 `;
 
 const client = new ApolloClient({
-  uri: process.env.REACT_APP_GRAPHQL_SERVER, // Use the REACT_APP_GRAPHQL_SERVER environment variable
+  uri: 'http://localhost:4000/graphql', // Use the REACT_APP_GRAPHQL_SERVER environment variable
   cache: new InMemoryCache(),
 });
 
@@ -30,6 +30,12 @@ const Signup = ({ handleLogin }) => {
     console.log('handleSubmit called'); // Log to check if handleSubmit is being called
 
     try {
+      console.log('Mutation variables:', {
+        username,
+        email,
+        password,
+      });
+      
       const { data } = await client.mutate({
         mutation: gql`
           mutation CreateUser($username: String!, $email: String!, $password: String!) {

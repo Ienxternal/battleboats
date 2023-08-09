@@ -1,14 +1,21 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { validationResult } = require('express-validator'); // Import express-validator
 const User = require('../models/UserModel');
 
 // Helper function to create a JWT token
 function createToken(user) {
-  return jwt.sign({ userId: user._id }, 'your-secret-key', { expiresIn: '1h' });
+  return jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
 }
 
 const authController = {
   signup: async (req, res) => {
+    // Validate the request body using express-validator
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(440).json({ errors: errors.array() });
+    }
+
     try {
       const { username, email, password } = req.body;
 
