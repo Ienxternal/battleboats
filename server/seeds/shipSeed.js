@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Ship = require('../models/Ship'); // Assuming the models folder is one level up
 
 // Replace this with your actual MongoDB URI
-const MONGO_URI = process.env.MONGODB_CONNECTION_STRING;
+const MONGO_URI = 'mongodb+srv://user0xdefault:SsXgFCxTSHDRKAz0@cluster0.ltqemr5.mongodb.net/';
 
 // Sample ship data
 const shipsData = [

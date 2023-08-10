@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 
-//const MONGO_URI = process.env.MONGODB_CONNECTION_STRING;
+const MONGO_URI = 'mongodb+srv://user0xdefault:SsXgFCxTSHDRKAz0@cluster0.ltqemr5.mongodb.net/';
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -40,7 +40,7 @@ const User = mongoose.model('User', userSchema);
 
 const userSeed = async () => {
   try {
-    await mongoose.connect(/*MONGO_URI*/'mongodb+srv://user0xdefault:SsXgFCxTSHDRKAz0@cluster0.ltqemr5.mongodb.net/', {
+    await mongoose.connect(MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
