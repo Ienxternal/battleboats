@@ -1,21 +1,21 @@
 import React from 'react';
-import { ApolloProvider } from '@apollo/client';
-import client from './apolloClient'; // Correct the file path based on your project structure
-import { createRoot } from 'react-dom/client';
-
+import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
+import { ApolloProvider } from '@apollo/client';
+import App from './App'; // Your main App component
+import client from './apollo'; // Import the Apollo Client instance
 import reportWebVitals from './reportWebVitals';
-import './styles.css';
 
-const root = createRoot(document.getElementById('root'));
-
+const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
       <App />
-    </ApolloProvider>
+    </ApolloProvider>,
   </React.StrictMode>
 );
 
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();

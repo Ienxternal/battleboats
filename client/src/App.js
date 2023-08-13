@@ -1,109 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import Signup from '../src/components/signup';
-import Login from '../src/components/login';
-import Logout from '../src/components/logout';
-import Lobby from '../src/components/lobby';
-
-import { io } from 'socket.io-client';
-import SplashPage from './pages/api/splashPage';
-
-const socket = io();
+import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Login from './pages/Login'; // Adjust the path based on your file structure
+import Signup from './pages/Signup'; // Adjust the path based on your file structure
+import Logout from './pages/Logout'; // Adjust the path based on your file structure
+import Landing from './pages/Landing'; // Adjust the path based on your file structure
+import Lobby from './pages/Lobby'; // Adjust the path based on your file structure
+import CreateGame from './pages/CreateGame'; // Adjust the path based on your file structure
+import Game from './pages/Game'; // Adjust the path based on your file structure
 
 const App = () => {
-  const [user, setUser] = useState(null);
-  const [error, setError] = useState('');
-
-  // Function to handle user login
-  const handleLogin = async (user) => {
-    try {
-      // Save the user information in state
-      setUser(user);
-      setError('');
-
-      // Save user data in localStorage
-      localStorage.setItem('user', JSON.stringify(user));
-
-    } catch (error) {
-      setError('An error occurred. Please try again later.');
-    }
-  };
-
-  // Function to handle user logout
-  const handleLogout = () => {
-    try {
-      // Clear the user information from state and localStorage
-      setUser(null);
-      setError('');
-      localStorage.removeItem('user');
-      socket.emit('/logout');
-    } catch (error) {
-      setError('An error occurred. Please try again later.');
-    }
-  };
-
-  // Check for user data in localStorage on app mount
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
-
-  useEffect(() => {
-    // Event listeners for socket.io events
-
-    // Listen for successful login event
-    socket.on('/loginSuccess', (user) => {
-      handleLogin(user);
-    });
-
-    // Listen for logout event
-    socket.on('/logout', () => {
-      handleLogout();
-    });
-
-    // Clean up socket listeners on unmount
-    return () => {
-      socket.off('/loginSuccess');
-      socket.off('/logout');
-    };
-  }, []);
-
-  return (
-    <Router>
-      <div>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/signup">Signup</Link>
-            </li>
-            <li>
-              <Link to="/login">Login</Link>
-            </li>
-            {user && (
-              <li>
-                <Link to="/lobby">Lobby</Link>
-              </li>
-            )}
-            {user && (
-              <li>
-                <Link to="/logout">Logout</Link>
-              </li>
-            )}
-          </ul>
-        </nav>
-
-        <Routes>
-          <Route path="/" element={<SplashPage />} />
-          <Route path="/signup" element={<Signup handleLogin={handleLogin} />} />
-          <Route path="/login" element={<Login handleLogin={handleLogin} />} />
-          <Route path="/lobby" element={<Lobby socket={socket} />} />
-          <Route path="/logout" element={<Logout handleLogout={handleLogout} />} />
-        </Routes>
-      </div>
-    </Router>
-  );
+    return (
+        <Router>
+            <Switch>
+                <Route exact path="/" component={Landing} />
+                <Route path="/Signup" component={Signup} />
+                <Route path="/Login" exact component={Login} />
+                <Route path="/Logout" component={Logout} />
+                <Route path="/Lobby" component={Lobby} />
+                <Route path="/Create-game" component={CreateGame} />
+                <Route path="/Game" component={Game} />
+                {/* Add your other routes here */}
+            </Switch>
+        </Router>
+    );
 };
 
 export default App;
