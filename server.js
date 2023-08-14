@@ -5,11 +5,12 @@ const { makeExecutableSchema } = require('@graphql-tools/schema');
 const http = require('http');
 const { SubscriptionServer } = require('subscriptions-transport-ws');
 const path = require('path');
-
+const { authenticateUser } = require('./middleware/authenticateUser');
+const connectDB = require('./config/connection');
 
 const { typeDefs, resolvers } = require('./schemas');
-const db = require('./config/connection');
-const authRoutes = require('./routes/authRoutes'); // Import authRoutes
+const authRoutes = require('./Routes/auth/authRoutes'); 
+const gamesRoutes = require('./api/games'); 
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -27,6 +28,8 @@ app.get('/', (req, res) => {
 
 // Use the authRoutes for authentication-related routes
 app.use('/api/auth', authRoutes);
+// Use the gamesRoutes for games-related API routes
+app.use('/api/games', gamesRoutes);
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 
@@ -36,12 +39,21 @@ const server = new ApolloServer({
   schema,
   context: ({ req }) => {
     // You can add context setup for HTTP requests here
+    authenticateUser(req);
   },
 });
 
 (async () => {
   await server.start();
   server.applyMiddleware({ app });
+
+  // Connect to MongoDB
+  try {
+    await connectDB.connect();
+    console.log('Connected to MongoDB');
+  } catch (error) {
+    console.error('Error connecting to MongoDB:', error);
+  }
 
   httpServer.listen(PORT, () => {
     console.log(`API server running on port ${PORT}!`);

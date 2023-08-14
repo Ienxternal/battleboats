@@ -1,12 +1,12 @@
 import React from 'react';
-import Lobby from '../components/Lobby';
+import LobbyPage from '../components/LobbyPage';
 
-const LobbyPage = () => {
+const Lobby = () => {
   return (
     <div className="page-container">
-      <Lobby />
+      <LobbyPage />
     </div>
   );
 };
 
-export default LobbyPage;
+export default Lobby;

@@ -1,7 +1,8 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
-const User = require('../models/User'); // Update the import path
-
+const jwt = require('jsonwebtoken'); // Import JWT library
+const User = require('../../models/User');
+const { authenticateUser } = require('../../middleware/authenticateUser'); // Import the authenticateUser middleware
 
 const router = express.Router();
 
@@ -29,31 +30,53 @@ router.post('/signup', async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
+
 // User login route
 router.post('/login', async (req, res) => {
     try {
         const { username, password } = req.body;
-    
+
         // Find the user by username
         const user = await User.findOne({ username });
         if (!user) {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
-    
+
         // Compare the provided password with the hashed password in the database
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
-    
-      // TODO: Generate and send JWT token for successful login
-      // Example: const token = generateToken(user);
-    
+
+        // Generate JWT token and send it in the response
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
         res.status(200).json({ message: 'Login successful', token });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
     }
+});
+
+// Protected routes
+router.get('/lobby', authenticateUser, (req, res) => {
+    res.json({ message: 'Welcome to the lobby' });
+});
+
+router.post('/create-game', authenticateUser, (req, res) => {
+    // Handle creating a new game
+});
+
+router.get('/game', authenticateUser, (req, res) => {
+    // Handle getting game details
+});
+
+router.post('/game/:id', authenticateUser, (req, res) => {
+    // Handle making a move in the game
+});
+
+router.post('/logout', authenticateUser, (req, res) => {
+    // Handle user logout
 });
 
 module.exports = router;

@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 
 // Landing page route
-router.get('/', (req, res) => {
+router.get('/Landing', (req, res) => {
   // ... (landing page logic)
 });
 

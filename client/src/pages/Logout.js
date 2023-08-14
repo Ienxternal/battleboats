@@ -1,12 +1,12 @@
 import React from 'react';
-import Logout from '../components/Logout';
+import LogoutPage from '../components/LogoutPage';
 
-const LogoutPage = () => {
+const Logout = () => {
     return (
         <div className="logout-page">
-            <Logout />
+            <LogoutPage />
         </div>
     );
 };
 
-export default LogoutPage;
+export default Logout;

@@ -1,12 +1,12 @@
 import React from 'react';
-import CreateGame from '../components/CreateGame';
+import CreateGamePage from '../components/CreateGamePage';
 
-const CreateGamePage = () => {
+const CreateGame = () => {
     return (
         <div className="page-container">
-        <CreateGame />
+        <CreateGamePage />
         </div>
     );
 };
 
-export default CreateGamePage;
+export default CreateGame;

@@ -1,18 +1,17 @@
 const mongoose = require('mongoose');
 
-const connectDB = async () => {
+const connect = async () => {
   try {
-    await mongoose.connect(
-      process.env.MONGODB_URI || 'mongodb://localhost:27017/myapp', // Fallback to local MongoDB
-      {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      }
-    );
+    await mongoose.connect('mongodb://localhost:27017/battleboat', {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true,
+      useFindAndModify: false,
+    });
     console.log('Connected to MongoDB');
   } catch (error) {
-    console.error('MongoDB connection error:', error);
+    console.error('Error connecting to MongoDB:', error);
   }
 };
 
-module.exports = connectDB;
+module.exports = { connect };

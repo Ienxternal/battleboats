@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Logout = () => {
-    const history = useHistory();
+    const navigate = useNavigate();
 
     useEffect(() => {
         // Perform logout-related actions here, such as clearing cookies or local storage
         // ...
 
         // Redirect to the home page after logging out
-        history.push('/');
-    }, [history]);
+        navigate('/'); // Use the navigate function to redirect
+    }, [navigate]);
 
     return (
         <div>

@@ -1,12 +1,12 @@
 import React from 'react';
-import Game from '../components/Game';
+import GamePage from '../components/GamePage';
 
-const GamePage = () => {
+const Game = () => {
     return (
         <div className="page-container">
-        <Game />
+        <GamePage />
         </div>
     );
 };
 
-export default GamePage;
+export default Game;

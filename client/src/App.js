@@ -11,7 +11,7 @@ import Game from './pages/Game'; // Adjust the path based on your file structure
 const App = () => {
     return (
         <Router>
-            <Switch>
+            
                 <Route exact path="/" component={Landing} />
                 <Route path="/Signup" component={Signup} />
                 <Route path="/Login" exact component={Login} />
@@ -20,7 +20,7 @@ const App = () => {
                 <Route path="/Create-game" component={CreateGame} />
                 <Route path="/Game" component={Game} />
                 {/* Add your other routes here */}
-            </Switch>
+            
         </Router>
     );
 };

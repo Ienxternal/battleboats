@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 
 // Lobby route
-router.get('/', (req, res) => {
+router.get('/Lobby', (req, res) => {
   // ... (lobby logic)
 });
 

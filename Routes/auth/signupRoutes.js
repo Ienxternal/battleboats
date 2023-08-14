@@ -7,7 +7,7 @@ const User = require('../models/User'); // Import the User model
 const router = express.Router();
 
 // User registration (signup) route
-router.post('/signup', async (req, res) => {
+router.post('/Signup', async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
